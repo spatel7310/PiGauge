@@ -1,0 +1,16 @@
+ [Unit]
+ Description=PiGauge power-loss safe shutdown watcher
+ 
+ [Service]
+ Type=simple
+ Environment=RUST_LOG=info
+ ExecStart=/home/pi/PiGauge/target/release/pigauge power-watch --gpio-line 17 --debounce-ms 1500 --shutdown-delay-ms 1500
+ Restart=always
+ RestartSec=2
+ 
+ # Needs GPIO + shutdown permissions; simplest is root.
+ User=root
+ 
+ [Install]
+ WantedBy=multi-user.target
+ 
