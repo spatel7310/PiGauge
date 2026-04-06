@@ -4,15 +4,19 @@
  };
  
  use anyhow::{anyhow, bail, Context, Result};
- 
- #[derive(Debug, Clone, Copy, Default)]
+ use serde::Serialize;
+
+ #[derive(Debug, Clone, Copy, Default, Serialize)]
  pub struct ObdSnapshot {
      pub rpm: Option<u16>,
      pub speed_kph: Option<u8>,
      pub coolant_c: Option<i16>,
      pub throttle_pct: Option<u8>,
      pub battery_v: Option<f32>,
+     #[serde(skip)]
      pub last_ok: Option<Instant>,
+     /// Whether OBD data is fresh (updated within the last 2 seconds).
+     pub connected: bool,
  }
  
  #[derive(Debug, Clone)]
@@ -59,28 +63,34 @@
      pub fn read_snapshot(&mut self) -> Result<ObdSnapshot> {
          // Query a small set of common PIDs; keep it cheap.
          let mut snap = ObdSnapshot::default();
- 
+         let mut ok_count = 0u32;
+
          if let Ok(v) = self.query_pid_u16("010C", parse_rpm) {
              snap.rpm = Some(v);
-             snap.last_ok = Some(Instant::now());
+             ok_count += 1;
          }
          if let Ok(v) = self.query_pid_u8("010D", parse_speed) {
              snap.speed_kph = Some(v);
-             snap.last_ok = Some(Instant::now());
+             ok_count += 1;
          }
          if let Ok(v) = self.query_pid_i16("0105", parse_temp_coolant) {
              snap.coolant_c = Some(v);
-             snap.last_ok = Some(Instant::now());
+             ok_count += 1;
          }
          if let Ok(v) = self.query_pid_u8("0111", parse_throttle) {
              snap.throttle_pct = Some(v);
-             snap.last_ok = Some(Instant::now());
+             ok_count += 1;
          }
          if let Ok(v) = self.query_pid_f32("ATRV", parse_voltage) {
              snap.battery_v = Some(v);
-             snap.last_ok = Some(Instant::now());
+             ok_count += 1;
          }
- 
+
+         if ok_count == 0 {
+             bail!("all OBD queries failed");
+         }
+         snap.last_ok = Some(Instant::now());
+         snap.connected = true;
          Ok(snap)
      }
  
@@ -168,7 +178,6 @@
      // Strip prompt, CR/LF, and common noise lines.
      let mut t = s.replace('>', "");
      t = t.replace('\r', "\n");
-     t = t.replace('\n', "\n");
      t.lines()
          .map(|l| l.trim())
          .filter(|l| !l.is_empty())

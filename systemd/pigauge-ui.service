@@ -1,22 +1,16 @@
- [Unit]
- Description=PiGauge OBD2 UI
-After=graphical-session.target
-PartOf=graphical-session.target
- 
- [Service]
- Type=simple
- Environment=RUST_LOG=info
-Environment=XDG_RUNTIME_DIR=%t
-Environment=WAYLAND_DISPLAY=wayland-0
-Environment=SDL_VIDEODRIVER=wayland
-ExecStart=/home/spatel7310/PiGauge/target/release/pigauge ui --obd-dev /dev/ttyUSB0 --obd-baud 38400 --fps 30 --poll-ms 200
+[Unit]
+Description=PiGauge OBD2 Web UI
+After=network.target
+
+[Service]
+Type=simple
+Environment=RUST_LOG=info
+ExecStart=/home/spatel7310/PiGauge/target/release/pigauge ui --obd-dev /dev/ttyUSB0 --obd-baud 38400 --fps 30 --poll-ms 200 --port 8080 --web-dir /home/spatel7310/PiGauge/web
 Restart=always
 RestartSec=2
- 
- # If you run into permission issues for /dev/ttyUSB0, add the user to dialout:
+
+# If you run into permission issues for /dev/ttyUSB0, add the user to dialout:
 # sudo usermod -aG dialout spatel7310
-ExecStartPre=/usr/bin/test -S %t/wayland-0
- 
- [Install]
-WantedBy=graphical-session.target
- 
+
+[Install]
+WantedBy=multi-user.target

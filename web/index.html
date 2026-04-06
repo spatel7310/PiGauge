@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=480, initial-scale=1, user-scalable=no">
+  <title>PiGauge</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="dash">
+    <header>
+      <span class="brand">PIGAUGE</span>
+      <span class="status-group">
+        <span class="status-label">LIVE</span>
+        <span id="status-dot" class="dot disconnected"></span>
+      </span>
+    </header>
+
+    <section class="speed-block">
+      <div class="speed-label">SPEED</div>
+      <div class="speed-row">
+        <span id="speed" class="speed-value">---</span>
+        <span class="speed-unit">mph</span>
+      </div>
+    </section>
+
+    <section class="gauge-panel">
+      <div class="gauge-col">
+        <div class="gauge-label">RPM</div>
+        <div id="rpm" class="gauge-value">----</div>
+      </div>
+      <div class="gauge-divider"></div>
+      <div class="gauge-col">
+        <div class="gauge-label">COOLANT</div>
+        <div id="coolant" class="gauge-value">---F</div>
+      </div>
+      <div class="gauge-divider"></div>
+      <div class="gauge-col">
+        <div class="gauge-label">THR / VBAT</div>
+        <div class="gauge-value">
+          <span id="throttle">---%</span>
+          <span class="vbat-spacer"></span>
+          <span id="battery">--.-V</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="mock-badge" class="mock-badge hidden">MOCK DATA</div>
+
+  <script src="app.js"></script>
+</body>
+</html>

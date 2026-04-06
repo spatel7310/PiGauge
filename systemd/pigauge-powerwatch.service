@@ -4,7 +4,7 @@
  [Service]
  Type=simple
  Environment=RUST_LOG=info
- ExecStart=/home/pi/PiGauge/target/release/pigauge power-watch --gpio-line 17 --debounce-ms 1500 --shutdown-delay-ms 1500
+ ExecStart=/home/spatel7310/PiGauge/target/release/pigauge power-watch --gpio-line 17 --debounce-ms 1500 --shutdown-delay-ms 1500
  Restart=always
  RestartSec=2
  
