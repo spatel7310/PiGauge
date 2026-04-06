@@ -2,52 +2,48 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=480, initial-scale=1, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   <title>PiGauge</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="dash">
-    <header>
-      <span class="brand">PIGAUGE</span>
-      <span class="status-group">
-        <span class="status-label">LIVE</span>
-        <span id="status-dot" class="dot disconnected"></span>
-      </span>
-    </header>
+  <!-- Pixel-art driving scene -->
+  <canvas id="scene"></canvas>
 
-    <section class="speed-block">
-      <div class="speed-label">SPEED</div>
-      <div class="speed-row">
-        <span id="speed" class="speed-value">---</span>
-        <span class="speed-unit">mph</span>
-      </div>
-    </section>
-
-    <section class="gauge-panel">
-      <div class="gauge-col">
-        <div class="gauge-label">RPM</div>
-        <div id="rpm" class="gauge-value">----</div>
-      </div>
-      <div class="gauge-divider"></div>
-      <div class="gauge-col">
-        <div class="gauge-label">COOLANT</div>
-        <div id="coolant" class="gauge-value">---F</div>
-      </div>
-      <div class="gauge-divider"></div>
-      <div class="gauge-col">
-        <div class="gauge-label">THR / VBAT</div>
-        <div class="gauge-value">
-          <span id="throttle">---%</span>
-          <span class="vbat-spacer"></span>
-          <span id="battery">--.-V</span>
-        </div>
-      </div>
-    </section>
+  <!-- RPM: top-left -->
+  <div id="rpm-display">
+    <span id="rpm" class="rpm-val">----</span>
+    <span class="rpm-unit">RPM</span>
   </div>
 
-  <div id="mock-badge" class="mock-badge hidden">MOCK DATA</div>
+  <!-- Other gauges: top-right -->
+  <div id="gauges">
+    <div class="g">
+      <span id="speed" class="g-val">---</span>
+      <span class="g-unit">mph</span>
+    </div>
+    <div class="g">
+      <span id="coolant" class="g-val">---</span>
+      <span class="g-unit">&deg;F</span>
+    </div>
+    <div class="g">
+      <span id="throttle" class="g-val">---</span>
+      <span class="g-unit">%</span>
+    </div>
+    <div class="g">
+      <span id="battery" class="g-val">--.-</span>
+      <span class="g-unit">V</span>
+    </div>
+  </div>
 
+  <!-- Connection status -->
+  <div id="status">
+    <span id="status-dot" class="dot disconnected"></span>
+  </div>
+
+  <div id="mock-badge" class="mock-badge hidden">MOCK</div>
+
+  <script src="scene.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

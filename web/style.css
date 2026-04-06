@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -5,160 +7,145 @@
 }
 
 html, body {
-  width: 480px;
-  height: 320px;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
-  background: #070910;
-  font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+  background: #0a0a0f;
+  font-family: "Orbitron", sans-serif;
   color: #ebf0f5;
-  -webkit-font-smoothing: antialiased;
+  image-rendering: pixelated;
 }
 
-#dash {
-  width: 480px;
-  height: 320px;
+/* ---- Canvas fills entire viewport ---- */
+#scene {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* ---- RPM: top-left ---- */
+#rpm-display {
+  position: fixed;
+  top: 3%;
+  left: 3%;
+  display: flex;
+  align-items: baseline;
+  gap: 0.3em;
+  z-index: 10;
+  pointer-events: none;
+  text-shadow:
+    0 0 8px rgba(0,0,0,0.95),
+    0 1px 3px rgba(0,0,0,0.7);
+}
+
+.rpm-val {
+  font-size: clamp(13px, 3.8vw, 22px);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+  min-width: 2em;
+  text-align: right;
+  transition: color 0.15s;
+}
+
+.rpm-unit {
+  font-size: clamp(8px, 2vw, 12px);
+  font-weight: 500;
+  color: #505a66;
+  letter-spacing: 0.06em;
+}
+
+/* ---- Other gauges: top-right ---- */
+#gauges {
+  position: fixed;
+  top: 3%;
+  right: 3%;
   display: flex;
   flex-direction: column;
-  padding: 10px 14px;
+  gap: clamp(2px, 1vh, 6px);
+  z-index: 10;
+  pointer-events: none;
+  text-shadow:
+    0 0 8px rgba(0,0,0,0.95),
+    0 1px 3px rgba(0,0,0,0.7);
 }
 
-/* ---- Header ---- */
-header {
+.g {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 20px;
-  flex-shrink: 0;
+  align-items: baseline;
+  gap: 0.3em;
 }
 
-.brand,
-.status-label {
-  font-size: 13px;
-  font-weight: 600;
+.g-val {
+  font-size: clamp(13px, 3.8vw, 22px);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #d0d8e0;
+  min-width: 2em;
+  text-align: right;
+}
+
+.g-unit {
+  font-size: clamp(8px, 2vw, 12px);
+  font-weight: 500;
+  color: #505a66;
   letter-spacing: 0.06em;
-  color: #919eac;
 }
 
-.status-group {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+/* ---- Status dot: bottom-left ---- */
+#status {
+  position: fixed;
+  bottom: 3%;
+  left: 3%;
+  z-index: 10;
+  pointer-events: none;
 }
 
 .dot {
-  width: 8px;
-  height: 8px;
+  display: block;
+  width: clamp(6px, 1.5vw, 10px);
+  height: clamp(6px, 1.5vw, 10px);
   border-radius: 50%;
-  flex-shrink: 0;
 }
 
-.dot.connected {
-  background: #40d3a2;
-}
-
-.dot.disconnected {
-  background: #eb564a;
-}
-
-/* ---- Speed ---- */
-.speed-block {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-top: 2px;
-}
-
-.speed-label {
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  color: #919eac;
-  margin-bottom: 2px;
-}
-
-.speed-row {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-}
-
-.speed-value {
-  font-size: 88px;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -2px;
-  font-variant-numeric: tabular-nums;
-}
-
-.speed-unit {
-  font-size: 22px;
-  font-weight: 500;
-  color: #919eac;
-  padding-bottom: 6px;
-}
-
-/* ---- Bottom gauge panel ---- */
-.gauge-panel {
-  flex-shrink: 0;
-  height: 88px;
-  background: #0e1218;
-  border-radius: 6px;
-  display: flex;
-  align-items: stretch;
-}
-
-.gauge-col {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 0 12px;
-}
-
-.gauge-divider {
-  width: 1px;
-  margin: 10px 0;
-  background: #181e27;
-}
-
-.gauge-label {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  color: #919eac;
-  margin-bottom: 4px;
-}
-
-.gauge-value {
-  font-size: 26px;
-  font-weight: 600;
-  line-height: 1.2;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-.vbat-spacer {
-  display: inline-block;
-  width: 8px;
-}
+.dot.connected { background: #40d3a2; }
+.dot.disconnected { background: #eb564a; }
 
 /* ---- Mock badge ---- */
 .mock-badge {
   position: fixed;
-  top: 6px;
+  top: 3%;
   left: 50%;
   transform: translateX(-50%);
   background: #f59e0b;
   color: #000;
-  font-size: 10px;
+  font-size: clamp(8px, 1.8vw, 11px);
   font-weight: 700;
-  letter-spacing: 0.08em;
-  padding: 2px 8px;
-  border-radius: 3px;
+  letter-spacing: 0.1em;
+  padding: 1px 8px;
+  border-radius: 2px;
   z-index: 100;
 }
 
-.hidden {
-  display: none;
+.hidden { display: none; }
+
+/* ---- Screen shake ---- */
+@keyframes shake {
+  0%  { transform: translate(0, 0); }
+  25% { transform: translate(-1px, 1px); }
+  50% { transform: translate(1px, -1px); }
+  75% { transform: translate(-1px, 0); }
+  100%{ transform: translate(0, 1px); }
+}
+
+body.shake-light {
+  animation: shake 0.08s infinite;
+}
+
+body.shake-heavy {
+  animation: shake 0.04s infinite;
 }
