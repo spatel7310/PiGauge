@@ -1,3 +1,7 @@
+# On Raspberry Pi OS (labwc / rpd-labwc), the desktop session does not activate
+# systemd user graphical-session.target, so WantedBy=graphical-session.target
+# never starts this unit at boot. Use ~/.config/autostart/pigauge-kiosk.desktop
+# (see repo docs or copy from deploy instructions) for reliable kiosk launch.
 [Unit]
 Description=PiGauge Chromium kiosk (fullscreen browser)
 After=graphical-session.target pigauge-ui.service
@@ -7,7 +11,9 @@ PartOf=graphical-session.target
 Type=simple
 Environment=DISPLAY=:0
 ExecStartPre=/bin/sleep 2
-ExecStart=/usr/bin/chromium-browser --kiosk --noerrdialogs --disable-infobars --disable-session-crashed-bubble --disable-translate --no-first-run http://localhost:8080
+# --kiosk traps the window and blocks Escape/F11; --app + --start-fullscreen keeps
+# a chromeless fullscreen window that still allows those keys to toggle fullscreen.
+ExecStart=/usr/bin/chromium --app=http://localhost:8080 --start-fullscreen --noerrdialogs --disable-infobars --disable-session-crashed-bubble --disable-translate --no-first-run --password-store=basic
 Restart=always
 RestartSec=3
 

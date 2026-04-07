@@ -108,7 +108,8 @@ function startMock() {
       coolant_c: Math.round(88 + 5 * Math.sin(t * 0.08)),
       throttle_pct: Math.round(Math.max(0, Math.min(100, throttle))),
       battery_v: 13.6 + 0.8 * Math.sin(t * 0.03),
-      connected: true,
+      // Mock is not real OBD — keep status dot "disconnected" so it is not confused with a live link.
+      connected: false,
     });
   }, 33);
 }
@@ -139,13 +140,27 @@ function connectWs() {
   ws.onerror = () => { ws.close(); };
 }
 
+// ---- Fullscreen kiosk window (Chromium --app --start-fullscreen) ----
+// Escape / F11: handled by the browser (not available with --kiosk).
+// Q: close the app window (works for dedicated --app windows).
+
+window.addEventListener(
+  "keydown",
+  (e) => {
+    if (e.key === "q" || e.key === "Q") {
+      e.preventDefault();
+      window.close();
+    }
+  },
+  true
+);
+
 // ---- Boot ----
 
 if (location.protocol === "file:") {
   startMock();
 } else {
   connectWs();
-  setTimeout(() => {
-    if (!useMock && $dot.classList.contains("disconnected")) startMock();
-  }, 1000);
+  // Do not start mock just because OBD is disconnected — the server still sends
+  // JSON with connected:false and null fields. Mock is only for missing WS (see onclose / file:).
 }
