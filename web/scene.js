@@ -209,7 +209,7 @@ function frame(time) {
     const scale = carW / carImg.naturalWidth;
     const carH = Math.floor(carImg.naturalHeight * scale);
 
-    const carX = Math.floor(W * 0.15);
+    const carX = Math.floor((W - carW) / 2);
     const carBottomTarget = Math.floor(H * 0.97);
     const carY = Math.floor(carBottomTarget - carH + rumbleY);
 
