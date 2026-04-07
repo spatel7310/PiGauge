@@ -204,7 +204,8 @@ function frame(time) {
   // 7. Car — pick sprite frame based on speed
   const carImg = getCarSprite(speed_kph);
   if (carImg) {
-    const carW = Math.floor(W * 0.42);
+    const isLandscape = W > H;
+    const carW = Math.floor(isLandscape ? W * 0.48 : H * 0.52);
     const scale = carW / carImg.naturalWidth;
     const carH = Math.floor(carImg.naturalHeight * scale);
 
