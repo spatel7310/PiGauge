@@ -165,6 +165,10 @@ fn spawn_obd_thread(shared: Arc<Mutex<ObdSnapshot>>, cfg: ObdConfig, poll: Durat
             loop {
                 match elm.read_snapshot() {
                     Ok(s) => {
+                        log::debug!(
+                            "obd: rpm={:?} spd={:?} clt={:?} thr={:?} bat={:?}",
+                            s.rpm, s.speed_kph, s.coolant_c, s.throttle_pct, s.battery_v
+                        );
                         if let Ok(mut g) = shared.lock() {
                             let prev_ok = g.last_ok;
                             *g = s;
