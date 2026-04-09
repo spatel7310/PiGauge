@@ -43,7 +43,7 @@ for (const { key, src } of SPRITE_LIST) {
 // Pick car frame based on speed
 function getCarSprite(speedKph) {
   if (speedKph > 80) return sprites["car_speed"];
-  if (speedKph > 5)  return sprites["car_drive"];
+  if (speedKph > 16) return sprites["car_drive"];
   return sprites["car_stop"];
 }
 
@@ -154,12 +154,11 @@ function frame(time) {
   const rpmNorm = Math.max(0, (rpm - 700)) / 5800; // 0..1
   const isIdle = speed_kph < 5 && rpm < 1200;
 
-  // Scroll speeds (native sprite pixels per second)
-  // These are tuned so layers feel right at various speeds.
-  scrollBack      += speedMph * 0.15 * dt;
-  scrollBuildings += speedMph * 0.6  * dt;
-  scrollPalms     += speedMph * 1.2  * dt;
-  scrollHighway   += speedMph * 3.5  * dt;
+  // Scroll speeds driven by vehicle speed (not RPM)
+  scrollBack      += speedMph * 1.5  * dt;
+  scrollBuildings += speedMph * 5.0  * dt;
+  scrollPalms     += speedMph * 10.0 * dt;
+  scrollHighway   += speedMph * 28.0 * dt;
 
   // Car rumble — gentle at idle/low speed, aggressive at high RPM
   let rumbleY = 0;

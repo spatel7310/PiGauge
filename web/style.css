@@ -43,7 +43,7 @@ html, body {
 }
 
 .rpm-val {
-  font-size: clamp(13px, 3.8vw, 22px);
+  font-size: clamp(16px, 5vw, 28px);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   color: #fff;
@@ -53,7 +53,7 @@ html, body {
 }
 
 .rpm-unit {
-  font-size: clamp(8px, 2vw, 12px);
+  font-size: clamp(10px, 2.5vw, 15px);
   font-weight: 500;
   color: #505a66;
   letter-spacing: 0.06em;
@@ -81,7 +81,7 @@ html, body {
 }
 
 .g-val {
-  font-size: clamp(13px, 3.8vw, 22px);
+  font-size: clamp(16px, 5vw, 28px);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   color: #d0d8e0;
@@ -90,7 +90,7 @@ html, body {
 }
 
 .g-unit {
-  font-size: clamp(8px, 2vw, 12px);
+  font-size: clamp(10px, 2.5vw, 15px);
   font-weight: 500;
   color: #505a66;
   letter-spacing: 0.06em;
