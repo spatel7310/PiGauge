@@ -13,7 +13,20 @@ Environment=DISPLAY=:0
 ExecStartPre=/bin/sleep 2
 # --kiosk traps the window and blocks Escape/F11; --app + --start-fullscreen keeps
 # a chromeless fullscreen window that still allows those keys to toggle fullscreen.
-ExecStart=/usr/bin/chromium --app=http://localhost:8080 --start-fullscreen --noerrdialogs --disable-infobars --disable-session-crashed-bubble --disable-translate --no-first-run --password-store=basic
+# --window-size/--window-position/--force-device-scale-factor override compositor
+# weirdness that can cause the window to render at the wrong size or offset.
+ExecStart=/usr/bin/chromium \
+  --app=http://localhost:8080 \
+  --start-fullscreen \
+  --window-size=1024,600 \
+  --window-position=0,0 \
+  --force-device-scale-factor=1 \
+  --noerrdialogs \
+  --disable-infobars \
+  --disable-session-crashed-bubble \
+  --disable-translate \
+  --no-first-run \
+  --password-store=basic
 Restart=always
 RestartSec=3
 

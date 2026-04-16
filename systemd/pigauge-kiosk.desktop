@@ -1,0 +1,22 @@
+# Copy this file to ~/.config/autostart/pigauge-kiosk.desktop
+# Using autostart instead of systemd ensures Chromium launches only after the
+# Wayland compositor (labwc) has fully initialised and applied the correct
+# display resolution — systemd graphical-session.target fires too early on
+# Raspberry Pi OS and can cause wrong-size or off-screen windows.
+#
+# Adjust --window-size to match your panel (default: 1024x600).
+[Desktop Entry]
+Type=Application
+Name=PiGauge Kiosk
+Exec=/usr/bin/chromium \
+  --app=http://localhost:8080 \
+  --start-fullscreen \
+  --window-size=1024,600 \
+  --window-position=0,0 \
+  --force-device-scale-factor=1 \
+  --noerrdialogs \
+  --disable-infobars \
+  --disable-session-crashed-bubble \
+  --disable-translate \
+  --no-first-run \
+  --password-store=basic

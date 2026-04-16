@@ -140,20 +140,64 @@ function connectWs() {
   ws.onerror = () => { ws.close(); };
 }
 
-// ---- Fullscreen kiosk window (Chromium --app --start-fullscreen) ----
-// Escape / F11: handled by the browser (not available with --kiosk).
-// Q: close the app window (works for dedicated --app windows).
+// ---- Kiosk: cursor hide + hold-Escape to exit fullscreen ----
+// Cursor is hidden by default (CSS cursor:none on body).
+// Short Escape tap: re-enters fullscreen, cursor stays hidden.
+// Escape held ≥ 1 s: stays out of fullscreen, cursor becomes visible.
+// Q: close the app window.
 
-window.addEventListener(
-  "keydown",
-  (e) => {
-    if (e.key === "q" || e.key === "Q") {
-      e.preventDefault();
-      window.close();
+const ESCAPE_HOLD_MS = 1000;
+let _escDown = null;
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && _escDown === null) {
+    _escDown = Date.now();
+  }
+  if (e.key === "q" || e.key === "Q") {
+    e.preventDefault();
+    window.close();
+  }
+}, true);
+
+document.addEventListener("keyup", (e) => {
+  if (e.key === "Escape" && _escDown !== null) {
+    const held = Date.now() - _escDown;
+    _escDown = null;
+    if (held < ESCAPE_HOLD_MS) {
+      // Short press — re-enter fullscreen and keep cursor hidden
+      document.documentElement.requestFullscreen().catch(() => {});
+    } else {
+      // Long hold — show cursor, stay out of fullscreen
+      document.body.classList.add("cursor-visible");
     }
-  },
-  true
-);
+  }
+}, true);
+
+// Hide cursor again whenever fullscreen is re-entered via JS API
+document.addEventListener("fullscreenchange", () => {
+  if (document.fullscreenElement) {
+    document.body.classList.remove("cursor-visible");
+  }
+});
+
+// ---- Fullscreen on load ----
+// --start-fullscreen can grab the wrong compositor geometry before Wayland has
+// fully negotiated the surface size.  By the time JS runs Chromium already
+// thinks it's in fullscreen, so a plain requestFullscreen() is a no-op.
+// Fix: exit whatever (possibly wrong-sized) fullscreen state exists, then
+// re-enter — same as the manual Escape → F11 workaround that already works.
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(async () => {
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+        // Brief pause so the compositor processes the exit before we re-enter.
+        await new Promise(r => setTimeout(r, 150));
+      }
+      await document.documentElement.requestFullscreen();
+    } catch (_) {}
+  }, 500);
+});
 
 // ---- Boot ----
 

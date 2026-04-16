@@ -16,6 +16,17 @@ html, body {
   image-rendering: pixelated;
 }
 
+/* Hide cursor everywhere in kiosk mode; body.cursor-visible re-enables it */
+*, *::before, *::after {
+  cursor: none !important;
+}
+
+body.cursor-visible *,
+body.cursor-visible *::before,
+body.cursor-visible *::after {
+  cursor: auto !important;
+}
+
 /* ---- Canvas fills entire viewport ---- */
 #scene {
   position: fixed;
